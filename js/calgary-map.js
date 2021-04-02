@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var geojsonFeature = {
         "type": "Feature",
         "properties": {
-            "name": "User made polygon"
+            "name": "User made polyline"
         },
         "geometry": {
             "type": "LineString",
@@ -23,17 +23,54 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    var polygon = L.geoJSON(geojsonFeature).addTo(mymap);
+    var polylineStyle = {
+        "color": "#ff7800",
+        "weight": 5,
+        "opacity": 0.65
+    };
+
+    var polyline = L.geoJSON(geojsonFeature, {style: polylineStyle}).addTo(mymap);
+
+    var sGeojsonFeature = {
+        "type": "Feature",
+        "properties": {
+            "name": "User made polyline"
+        },
+        "geometry": {
+            "type": "LineString",
+            "coordinates": []
+        }
+    };
+
+    var sPolylineStyle = {
+        "color": "#007800",
+        "weight": 5,
+        "opacity": 0.65
+    };
+
+    var sPolyline = L.geoJSON(sGeojsonFeature, {style: sPolylineStyle}).addTo(mymap);
 
     function onMapClick(e) {
         geojsonFeature["geometry"]["coordinates"].push([e.latlng['lng'], e.latlng['lat']]);
         console.log(e);
         console.log(geojsonFeature);
         // alert("You clicked the map at " + e.latlng);
-        polygon.remove();
-        polygon = L.geoJSON(geojsonFeature).addTo(mymap);
+        polyline.remove();
+        polyline = L.geoJSON(geojsonFeature, {style: polylineStyle}).addTo(mymap);
     }
 
     mymap.on('click', onMapClick);
+
+    document.querySelector('#clear').onclick = function () {
+        geojsonFeature["geometry"]["coordinates"] = [];
+        polyline.remove();
+        sPolyline.remove();
+    };
+
+    document.querySelector('#simplify').onclick = function () {
+        var options = {tolerance: 0.007, highQuality: false};
+        var simplified = turf.simplify(geojsonFeature, options);
+        sPolyline = L.geoJSON(simplified).addTo(mymap);
+    };
 
 });
