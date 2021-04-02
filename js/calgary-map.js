@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var polylineStyle = {
         "color": "#ff7800",
-        "weight": 5,
-        "opacity": 0.65
+        "weight": 2,
+        "opacity": 0.9
     };
 
     var polyline = L.geoJSON(geojsonFeature, {style: polylineStyle}).addTo(mymap);
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var sPolylineStyle = {
         "color": "#007800",
         "weight": 5,
-        "opacity": 0.65
+        "opacity": 0.1
     };
 
     var sPolyline = L.geoJSON(sGeojsonFeature, {style: sPolylineStyle}).addTo(mymap);
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     document.querySelector('#simplify').onclick = function () {
-        var options = {tolerance: 0.007, highQuality: false};
+        var options = {tolerance: 0.002, highQuality: false};
         var simplified = turf.simplify(geojsonFeature, options);
         sPolyline = L.geoJSON(simplified).addTo(mymap);
     };
